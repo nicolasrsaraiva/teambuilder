@@ -10,7 +10,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 
 @Entity(name = "Trainer")
-@Table(name = "trainer")
+@Table(name = "Trainer")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

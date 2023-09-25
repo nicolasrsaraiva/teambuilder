@@ -3,6 +3,7 @@ package com.stead.teambuilder.controller;
 import com.stead.teambuilder.model.Trainer;
 import com.stead.teambuilder.repository.TrainerRepository;
 import com.stead.teambuilder.service.dto.trainer.CreateTrainerDTO;
+import com.stead.teambuilder.service.dto.trainer.DeleteTrainerDTO;
 import com.stead.teambuilder.service.dto.trainer.ReadTrainerDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/trainer")
@@ -55,6 +55,21 @@ public class TrainerController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<DeleteTrainerDTO> delete(@PathVariable Long id) {
+        try {
+            Trainer trainer = trainerRepository.findTrainerById(id);
+            if (trainer != null) {
+                trainerRepository.deleteById(id);
+                return new ResponseEntity<DeleteTrainerDTO>(new DeleteTrainerDTO(trainer), HttpStatus.ACCEPTED);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

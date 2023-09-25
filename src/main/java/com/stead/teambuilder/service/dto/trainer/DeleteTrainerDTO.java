@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DeleteTrainerDTO {
-    private Long id;
-    private String name;
+    private String firstName;
+    private String lastName;
 
     public DeleteTrainerDTO(Trainer trainer) {
-        this.id = trainer.getId();
-        this.name = trainer.getName();
+        this.firstName = trainer.getFirstName();
+        this.lastName = trainer.getLastName();
     }
 }

@@ -3,11 +3,12 @@ package com.stead.teambuilder.service.dto.trainer;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-
 @Getter
 @Setter
 public class CreateTrainerDTO {
-    @NotBlank
-    private String name;
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String email;
+    private String password;
 }

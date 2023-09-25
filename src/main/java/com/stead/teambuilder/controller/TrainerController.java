@@ -5,7 +5,6 @@ import com.stead.teambuilder.repository.TrainerRepository;
 import com.stead.teambuilder.service.dto.trainer.CreateTrainerDTO;
 import com.stead.teambuilder.service.dto.trainer.DeleteTrainerDTO;
 import com.stead.teambuilder.service.dto.trainer.ReadTrainerDTO;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +20,19 @@ public class TrainerController {
     private TrainerRepository trainerRepository;
 
     @PostMapping
-    @Transactional
     public ResponseEntity<String> create(@Valid @RequestBody CreateTrainerDTO createTrainerDTO){
         try {
+            boolean usernameAlreadyExists = trainerRepository.existsByUsername(createTrainerDTO.getUsername());
+            boolean emailAlreadyExists = trainerRepository.existsByEmail(createTrainerDTO.getEmail());
+            if (usernameAlreadyExists) {
+                return new ResponseEntity<String>("Username already exists", HttpStatus.BAD_REQUEST);
+            }
+            if (emailAlreadyExists) {
+                return new ResponseEntity<String>("Email already exists", HttpStatus.BAD_REQUEST);
+            }
             trainerRepository.save(new Trainer(createTrainerDTO));
             return new ResponseEntity<String>("User created", HttpStatus.CREATED);
+
         } catch (Exception e) {
             return new ResponseEntity<String>("Failed to create user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -36,7 +43,7 @@ public class TrainerController {
         try {
             Trainer trainer = trainerRepository.findTrainerById(id);
             if (trainer != null) {
-                return new ResponseEntity<ReadTrainerDTO>(new ReadTrainerDTO(trainer), HttpStatus.FOUND);
+                return new ResponseEntity<>(new ReadTrainerDTO(trainer), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -45,10 +52,10 @@ public class TrainerController {
         }
     }
 
-    @GetMapping("/name/{name}")
-    public ResponseEntity<ReadTrainerDTO> readTrainerByName(@PathVariable String name) {
+    @GetMapping("/username/{username}")
+    public ResponseEntity<ReadTrainerDTO> readTrainerByName(@PathVariable String username) {
         try {
-            Trainer trainer = trainerRepository.findTrainerByName(name);
+            Trainer trainer = trainerRepository.findTrainerByUsername(username);
             if (trainer != null) {
                 return new ResponseEntity<ReadTrainerDTO>(new ReadTrainerDTO(trainer), HttpStatus.FOUND);
             } else {

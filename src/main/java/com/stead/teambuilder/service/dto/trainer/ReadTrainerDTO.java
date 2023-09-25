@@ -8,10 +8,20 @@ import lombok.Setter;
 @Setter
 public class ReadTrainerDTO {
     private Long id;
-    private String name;
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String email;
+
+    public ReadTrainerDTO(){
+        super();
+    }
 
     public ReadTrainerDTO(Trainer trainer) {
         this.id = trainer.getId();
-        this.name = trainer.getName();
+        this.firstName = trainer.getFirstName();
+        this.lastName = trainer.getLastName();
+        this.username = trainer.getUsername();
+        this.email = trainer.getEmail();
     }
 }
